@@ -1,4 +1,4 @@
-//read the file, extract each line and put it in singly linked list, search the id if it exist, if it exist: display if not: error
+//read the file, extract each line and put it in singly linked list, search the name or id if it exist, if it exist: display if not: error
 import javax.swing.*;
 import java.awt.*;
 import java.io.BufferedReader;
@@ -6,11 +6,10 @@ import java.io.FileReader;
 import java.io.IOException;
 
 class MasterNode {
-    int pid;
-    String name, sex, bday, contactNum, address, bplace;
+    String pid, name, sex, bday, contactNum, address, bplace;
     MasterNode next;
 
-    public MasterNode(int pid, String name, String sex, String bday, String contactNum, String address, String bplace) {
+    public MasterNode(String pid, String name, String sex, String bday, String contactNum, String address, String bplace) {
         this.pid = pid;
         this.name = name;
         this.sex = sex;
@@ -23,11 +22,11 @@ class MasterNode {
 }
 
 class TransactionNode {
-    int vid, pid, sf, mf, tf;
-    String date, symptoms, diagnosis, prescriptions, doctor;
+    int sf, mf, tf;
+    String vid, pid, date, symptoms, diagnosis, prescriptions, doctor;
     TransactionNode next;
 
-    TransactionNode(int vid, int pid, int sf, int mf, int tf, String date, String symptoms, String diagnosis, String prescription, String doctor) {
+    TransactionNode(String vid, String pid, int sf, int mf, int tf, String date, String symptoms, String diagnosis, String prescription, String doctor) {
         this.vid = vid;
         this.pid = pid;
         this.sf = sf;
@@ -47,7 +46,7 @@ class Healthcare {
     TransactionNode headTransaction;
 
     public void retrieveMaster() {
-        String filename = "C:/Acads/scar/2nd year 2nd sem/Programming Language/Healthcare Information System/master.txt";
+        String filename = "C:/Acads/scar/2nd year 2nd sem/Programming Language/Healthcare Information System/Patient History Module/master.txt";
 
         try (BufferedReader br = new BufferedReader(new FileReader(filename))) {
 
@@ -55,9 +54,9 @@ class Healthcare {
 
             while ((line = br.readLine()) != null) {
 
-                String[] data = line.split(",");
+                String[] data = line.split("\\|");
 
-                int pid = Integer.parseInt(data[0].trim());
+                String pid = data[0].trim();
                 String name = data[1].trim();
                 String sex = data[2].trim();
                 String bday = data[3].trim();
@@ -74,7 +73,7 @@ class Healthcare {
     }
 
     public void retrieveTransaction() {
-        String filename = "C:/Acads/scar/2nd year 2nd sem/Programming Language/Healthcare Information System/transaction.txt";
+        String filename = "C:/Acads/scar/2nd year 2nd sem/Programming Language/Healthcare Information System/Patient History Module/transaction.txt";
 
         try (BufferedReader br = new BufferedReader(new FileReader(filename))) {
 
@@ -82,10 +81,10 @@ class Healthcare {
 
             while ((line = br.readLine()) != null) {
 
-                String[] data = line.split(",");
+                String[] data = line.split("\\|");
 
-                int vid = Integer.parseInt(data[0].trim());
-                int pid = Integer.parseInt(data[1].trim());
+                String vid = data[0].trim();
+                String pid = data[1].trim();
                 String date = data[2].trim();
                 String symptoms = data[3].trim();
                 String diagnosis = data[4].trim();
@@ -104,7 +103,7 @@ class Healthcare {
         }
     }
 
-    public void addMaster(int pid, String name, String sex, String bday, String contactNum, String address, String bplace) {
+    public void addMaster(String pid, String name, String sex, String bday, String contactNum, String address, String bplace) {
         MasterNode newNode = new MasterNode(pid, name, sex, bday, contactNum, address, bplace);
         MasterNode p = headMaster;
 
@@ -130,7 +129,7 @@ class Healthcare {
 
     }
 
-    public void addTransaction(int vid, int pid, int sf, int mf, int tf, String date, String symptoms, String diagnosis, String prescription, String doctor) {
+    public void addTransaction(String vid, String pid, int sf, int mf, int tf, String date, String symptoms, String diagnosis, String prescription, String doctor) {
         TransactionNode newNode = new TransactionNode(vid, pid, sf, mf, tf, date, symptoms, diagnosis, prescription, doctor);
         TransactionNode p = headTransaction;
 
@@ -203,6 +202,8 @@ class Healthcare {
                 return;
             }
 
+            JOptionPane.showMessageDialog(null, "Log in successful");
+
             patientHistory();
             frame.dispose();
         });
@@ -234,13 +235,13 @@ class Healthcare {
         button.setAlignmentX(Component.CENTER_ALIGNMENT);
 
         button.addActionListener(e -> {
-            String patientName = field.getText();
+            String patientNameOrID = field.getText().trim();
 
-            if (patientName.isEmpty()) {
+            if (patientNameOrID.isEmpty()) {
                 JOptionPane.showMessageDialog(null, "Please input patient name");
                 return;
             }
-            search(patientName);
+            search(patientNameOrID);
         });
 
         panel.add(Box.createVerticalGlue());
@@ -253,25 +254,82 @@ class Healthcare {
         frame.setVisible(true);
     }
 
-    public void search(String name) {
+    public void search(String nameOrID) {
+
         MasterNode p = headMaster;
 
         while (p != null) {
-            if  (p.name.equalsIgnoreCase(name)) {
-                String patientInfo = "Patient ID: " + p.pid + "\n" + "Name: " + p.name + "\n" + "Sex: " + p.sex + "\n" + "Birthday: " + p.bday + "\n" + "Contact Number: " + p.contactNum + "\n" + "Address: " + p.address + "\n" + "Birthplace: " + p.bplace;
 
-                JOptionPane.showMessageDialog(null, patientInfo, "Patient Details", JOptionPane.INFORMATION_MESSAGE);
+            if (p.name.equalsIgnoreCase(nameOrID.trim()) || p.pid.equals(nameOrID.trim())) {
+
+                // Build patient info
+                StringBuilder info = new StringBuilder();
+
+                info.append("PATIENT INFORMATION\n");
+                info.append("----------------------------\n");
+                info.append("Patient ID: ").append(p.pid).append("\n");
+                info.append("Name: ").append(p.name).append("\n");
+                info.append("Sex: ").append(p.sex).append("\n");
+                info.append("Birthday: ").append(p.bday).append("\n");
+                info.append("Contact: ").append(p.contactNum).append("\n");
+                info.append("Address: ").append(p.address).append("\n");
+                info.append("Birthplace: ").append(p.bplace).append("\n\n");
+
+                info.append("TRANSACTION HISTORY\n");
+                info.append("----------------------------\n");
+
+                TransactionNode t = headTransaction;
+                boolean found = false;
+
+                while (t != null) {
+
+                    if (t.pid.equals(p.pid)) {
+
+                        found = true;
+
+                        info.append("Visit ID: ").append(t.vid).append("\n");
+                        info.append("Date: ").append(t.date).append("\n");
+                        info.append("Symptoms: ").append(t.symptoms).append("\n");
+                        info.append("Diagnosis: ").append(t.diagnosis).append("\n");
+                        info.append("Prescription: ").append(t.prescriptions).append("\n");
+                        info.append("Doctor: ").append(t.doctor).append("\n");
+                        info.append("Service Fee: ").append(t.sf).append("\n");
+                        info.append("Medicine Fee: ").append(t.mf).append("\n");
+                        info.append("Total Fee: ").append(t.tf).append("\n");
+                        info.append("----------------------------\n\n");
+                    }
+
+                    t = t.next;
+                }
+
+                if (!found) {
+                    info.append("No transaction records found.\n");
+                }
+
+                JFrame frame = new JFrame("Patient History");
+                frame.setSize(600, 600);
+                frame.setLocationRelativeTo(null);
+
+                JTextArea details = new JTextArea(info.toString());
+                details.setEditable(false);
+                details.setFont(new Font("Arial", Font.PLAIN, 14));
+                details.setLineWrap(true);
+                details.setWrapStyleWord(true);
+
+                JScrollPane scroll = new JScrollPane(details);
+
+                frame.add(scroll);
+                frame.setVisible(true);
+
                 return;
             }
 
             p = p.next;
         }
 
-        if (p == null) {
-            JOptionPane.showMessageDialog(null, "Patient not in the list");
-            return;
-        }
+        JOptionPane.showMessageDialog(null, "Patient not in the list");
     }
+
 }
 public class Main {
     public static void main(String[] args) {
