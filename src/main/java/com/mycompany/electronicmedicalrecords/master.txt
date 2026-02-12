@@ -1,0 +1,2 @@
+PID1|Carl Stephen Lazaro|01-01-2000|Male|09123456789|123 Gotham|Burat City
+PID2|Ariel Tomagan|01-01-2000|Male|09123456789|123123|Ermita

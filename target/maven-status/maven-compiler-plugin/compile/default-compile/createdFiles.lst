@@ -1,0 +1,13 @@
+com\mycompany\electronicmedicalrecords\ConsultationFrame.class
+com\mycompany\electronicmedicalrecords\LoginFrame.class
+com\mycompany\electronicmedicalrecords\TransactionNode.class
+com\mycompany\electronicmedicalrecords\MasterLoader.class
+com\mycompany\electronicmedicalrecords\Node.class
+com\mycompany\electronicmedicalrecords\HealthcareSystem.class
+com\mycompany\electronicmedicalrecords\MasterNode.class
+com\mycompany\electronicmedicalrecords\RegistrationFrame.class
+com\mycompany\electronicmedicalrecords\FileLoader.class
+com\mycompany\electronicmedicalrecords\Main.class
+com\mycompany\electronicmedicalrecords\PatientHistoryFrame.class
+com\mycompany\electronicmedicalrecords\DashboardFrame.class
+com\mycompany\electronicmedicalrecords\TransactionLoader.class
